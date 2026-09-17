@@ -207,29 +207,19 @@ body {
     <div class="section">
       <div class="section__title">Education</div>
       <div class="section__list">
+        {% for edu in user.education_set.all %}
         <div class="section__list-item">
           <div class="left">
-            <div class="name">Sample Institute of technology</div>
-            <div class="addr">San Fr, CA</div>
-            <div class="duration">Jan 2011 - Feb 2015</div>
+            <div class="name">{{ edu.university }}</div>
+            <div class="addr">{{ edu.location }}</div>
+            <div class="duration">{{ edu.date_range }}</div>
           </div>
           <div class="right">
-            <div class="name">Fr developer</div>
-            <div class="desc">did This and that</div>
+            <div class="name">{{ edu.pretified_degree }}</div>
+            <div class="desc">{{ edu.study_description }}</div>
           </div>
         </div>
-        <div class="section__list-item">
-          <div class="left">
-            <div class="name">Akount</div>
-            <div class="addr">San Monica, CA</div>
-            <div class="duration">Jan 2011 - Feb 2015</div>
-          </div>
-          <div class="right">
-            <div class="name">Fr developer</div>
-            <div class="desc">did This and that</div>
-          </div>
-        </div>
-
+        {% endfor %}
       </div>
       
   </div>
