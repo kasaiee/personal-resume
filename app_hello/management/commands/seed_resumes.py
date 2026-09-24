@@ -25,6 +25,10 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        choice = input('Do you want to DELETE EXISTING USERS? (Y/n)')
+        if choice == 'Y':
+            User.objects.all().delete()
+
         count = options["count"]
 
         fake = Faker()
@@ -190,6 +194,7 @@ class Command(BaseCommand):
                             k=random.randint(3, 5),
                         )
                     ),
+                    location=f"{fake.city()}, {fake.country()}",
                 )
             )
 
