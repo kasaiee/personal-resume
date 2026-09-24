@@ -1,0 +1,442 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <main class="resume-directory">
+
+    <header class="resume-directory__header">
+      <h1 class="resume-directory__title">
+        Resume <span class="resume-directory__accent">Directory</span>
+      </h1>
+      <p class="resume-directory__subtitle">
+        Find developers and professionals by skills, experience and location.
+      </p>
+    </header>
+
+    <div class="resume-directory__body">
+
+      <!-- =========================
+           FILTERS
+           ========================= -->
+      <aside class="resume-filters">
+
+        <form id="resume-filter-form">
+
+          <div class="resume-filter-group">
+            <div class="resume-section-title">Search</div>
+            <input
+              id="resume-search"
+              class="resume-input"
+              type="search"
+              placeholder="Search by name, skill or job title..."
+              name="q"
+              value="{{ q }}"
+            >
+          </div>
+
+          <div class="resume-filter-group">
+            <div class="resume-section-title">Experience Level</div>
+
+            <label class="resume-filter-check">
+              <input type="checkbox" name="experience" value="entry">
+              <span>Entry Level (0–2 years)</span>
+            </label>
+
+            <label class="resume-filter-check">
+              <input type="checkbox" name="experience" value="mid">
+              <span>Mid Level (3–5 years)</span>
+            </label>
+
+            <label class="resume-filter-check">
+              <input type="checkbox" name="experience" value="senior">
+              <span>Senior (6+ years)</span>
+            </label>
+          </div>
+
+          <div class="resume-filter-group">
+            <div class="resume-section-title">Location</div>
+            <select id="resume-location" class="resume-select">
+              <option value="">All Locations</option>
+              <option>Tehran, Iran</option>
+              <option>Isfahan, Iran</option>
+              <option>Shiraz, Iran</option>
+              <option>Mashhad, Iran</option>
+              <option>Karaj, Iran</option>
+            </select>
+          </div>
+
+          <div class="resume-filter-group">
+            <div class="resume-section-title">Skills</div>
+
+            <label class="resume-filter-check">
+              <input type="checkbox" name="skill" value="Git">
+              <span>Git</span>
+            </label>
+
+            <label class="resume-filter-check">
+              <input type="checkbox" name="skill" value="Docker">
+              <span>Docker</span>
+            </label>
+
+            <label class="resume-filter-check">
+              <input type="checkbox" name="skill" value="Python">
+              <span>Python</span>
+            </label>
+
+            <label class="resume-filter-check">
+              <input type="checkbox" name="skill" value="TypeScript">
+              <span>TypeScript</span>
+            </label>
+
+            <label class="resume-filter-check">
+              <input type="checkbox" name="skill" value="React">
+              <span>React</span>
+            </label>
+
+            <label class="resume-filter-check">
+              <input type="checkbox" name="skill" value="Django">
+              <span>Django</span>
+            </label>
+
+            <label class="resume-filter-check">
+              <input type="checkbox" name="skill" value="PostgreSQL">
+              <span>PostgreSQL</span>
+            </label>
+          </div>
+
+          <div class="resume-filter-actions">
+            <button type="submit" class="resume-button resume-button--primary">
+              Apply Filters
+            </button>
+
+            <button type="button" id="reset-filters" class="resume-button resume-button--secondary">
+              Reset Filters
+            </button>
+          </div>
+
+        </form>
+
+      </aside>
+
+
+      <!-- =========================
+           RESULTS
+           ========================= -->
+      <section class="resume-results">
+
+        <div class="resume-results__toolbar">
+
+          <div class="resume-results__count">
+            <span id="result-count-number">5</span>
+            <span>candidates found</span>
+          </div>
+
+          <label class="resume-sort">
+            <span>Sort by:</span>
+            <select id="resume-sort">
+              <option value="recent">Most Recent</option>
+              <option value="experience">Experience</option>
+              <option value="name">Name</option>
+            </select>
+          </label>
+
+        </div>
+
+
+        <div id="resume-list">
+          {% for user in page_obj %}
+            <!-- Candidate {{ forloop.counter }} -->
+            <article
+              class="resume-card"
+              data-name="{{ user.get_full_name }}"
+              data-role="{{ user.profile.job_title }}"
+              data-location="{{ user.profile.location }}"
+              data-years="3"
+              data-skills="{% for skill in user.skill_set.all %}{{ skill.title }}, {% endfor %}"
+            >
+              <div class="resume-card__grid">
+
+                <div class="resume-card__profile">
+                  <div class="resume-card__name">{{ user.get_full_name }}</div>
+                  <div class="resume-card__role">{{ user.profile.job_title }}</div>
+                  <div class="resume-card__meta">
+                    📍 {{ user.profile.location }}<br>
+                    ▣ 3+ years experience
+                  </div>
+                  <p class="resume-card__summary">
+                    {{ user.profile.description }}
+                  </p>
+                </div>
+
+                <div>
+                  <div class="resume-card__label">Experience</div>
+
+                  {% for ex in user.experience_set.all %}
+                    <div class="resume-card__item">
+                      <div class="resume-card__item-name">{{ ex.title }}</div>
+                      <div class="resume-card__item-detail">{{ ex.location }}</div>
+                      <div class="resume-card__item-detail">{{ ex.date_range }}</div>
+                    </div>
+                  {% endfor %}
+                </div>
+
+                <div>
+                  <div class="resume-card__label">Skills</div>
+
+                  <div class="resume-card__skills">
+                    {% for skill in user.skill_set.all %}
+                      <div class="resume-skill">
+                        <span class="resume-skill__name">{{ skill.title }}</span>
+                        <span class="resume-skill__dots">
+                          <i class="resume-skill__dot {% if skill.level >= 1 %}is-active{% endif %}"></i>
+                          <i class="resume-skill__dot {% if skill.level >= 2 %}is-active{% endif %}"></i>
+                          <i class="resume-skill__dot {% if skill.level >= 3 %}is-active{% endif %}"></i>
+                          <i class="resume-skill__dot {% if skill.level >= 4 %}is-active{% endif %}"></i>
+                          <i class="resume-skill__dot {% if skill.level >= 5 %}is-active{% endif %}"></i>
+                        </span>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+
+                <div class="resume-card__action">
+                  <a href="{% url "resume" id=user.id %}" class="resume-view-button">
+                    View Profile
+                    <span class="resume-view-button__arrow">→</span>
+                  </a>
+                </div>
+
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+
+
+        <!-- =========================
+             PAGINATION
+             ========================= -->
+        <nav class="resume-pagination" aria-label="Resume pagination">
+
+          <div class="resume-pagination__buttons">
+
+            {% if page_obj.has_previous %}
+                <a class="resume-page"
+                   href="?page=1"
+                   data-page="first">«</a>
+        
+                <a class="resume-page"
+                   href="?page={{ page_obj.previous_page_number }}"
+                   data-page="prev">‹</a>
+            {% endif %}
+        
+        
+            {% with current=page_obj.number total=page_obj.paginator.num_pages %}
+        
+                {% if total <= 5 %}
+        
+                    {% for num in page_obj.paginator.page_range %}
+                        <a class="resume-page {% if num == current %}is-active{% endif %}"
+                           href="?page={{ num }}"
+                           data-page="{{ num }}">
+                            {{ num }}
+                        </a>
+                    {% endfor %}
+        
+                {% elif current <= 3 %}
+        
+                    {% for num in "12345" %}
+                        <a class="resume-page {% if forloop.counter == current %}is-active{% endif %}"
+                           href="?page={{ forloop.counter }}"
+                           data-page="{{ forloop.counter }}">
+                            {{ forloop.counter }}
+                        </a>
+                    {% endfor %}
+        
+                {% elif current >= total|add:"-2" %}
+        
+                    {% for num in "12345" %}
+                        {% with page_number=total|add:forloop.counter|add:"-5" %}
+                            <a class="resume-page {% if page_number == current %}is-active{% endif %}"
+                               href="?page={{ page_number }}"
+                               data-page="{{ page_number }}">
+                                {{ page_number }}
+                            </a>
+                        {% endwith %}
+                    {% endfor %}
+        
+                {% else %}
+        
+                    {% for num in "12345" %}
+                        {% with page_number=current|add:forloop.counter|add:"-3" %}
+                            <a class="resume-page {% if page_number == current %}is-active{% endif %}"
+                               href="?page={{ page_number }}"
+                               data-page="{{ page_number }}">
+                                {{ page_number }}
+                            </a>
+                        {% endwith %}
+                    {% endfor %}
+        
+                {% endif %}
+        
+            {% endwith %}
+        
+        
+            {% if page_obj.has_next %}
+                <a class="resume-page"
+                   href="?page={{ page_obj.next_page_number }}"
+                   data-page="next">›</a>
+        
+                <a class="resume-page"
+                   href="?page={{ page_obj.paginator.num_pages }}"
+                   data-page="last">»</a>
+            {% endif %}
+        
+        </div>
+
+          <div class="resume-pagination__info">
+            Showing 1–5 of 124
+          </div>
+
+        </nav>
+
+      </section>
+
+    </div>
+  </main>
+
+  {% endblock content %}
+  {% block js %}
+  {% comment %} <script>
+    /*
+      This JavaScript is intentionally small.
+
+      In the real Django project, search/filter/pagination should ideally
+      be handled by the backend so that the URL contains the current
+      filters and page number.
+
+      The code below only makes the static/demo HTML interactive.
+    */
+
+    const form = document.getElementById("resume-filter-form");
+    const resetButton = document.getElementById("reset-filters");
+    const searchInput = document.getElementById("resume-search");
+    const locationSelect = document.getElementById("resume-location");
+    const cards = Array.from(document.querySelectorAll(".resume-card"));
+    const countElement = document.getElementById("result-count-number");
+
+    function applyDemoFilters() {
+      const search = searchInput.value.trim().toLowerCase();
+      const location = locationSelect.value;
+
+      const selectedSkills = Array.from(
+        document.querySelectorAll('input[name="skill"]:checked')
+      ).map(input => input.value.toLowerCase());
+
+      const selectedExperience = Array.from(
+        document.querySelectorAll('input[name="experience"]:checked')
+      ).map(input => input.value);
+
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const name = card.dataset.name.toLowerCase();
+        const role = card.dataset.role.toLowerCase();
+        const cardLocation = card.dataset.location;
+        const years = Number(card.dataset.years);
+        const skills = card.dataset.skills
+          .split(",")
+          .map(skill => skill.trim().toLowerCase());
+
+        const matchesSearch =
+          !search ||
+          name.includes(search) ||
+          role.includes(search) ||
+          skills.some(skill => skill.includes(search));
+
+        const matchesLocation =
+          !location || cardLocation === location;
+
+        const matchesSkills =
+          selectedSkills.length === 0 ||
+          selectedSkills.every(skill => skills.includes(skill));
+
+        const matchesExperience =
+          selectedExperience.length === 0 ||
+          selectedExperience.some(level => {
+            if (level === "entry") return years <= 2;
+            if (level === "mid") return years >= 3 && years <= 5;
+            if (level === "senior") return years >= 6;
+            return true;
+          });
+
+        const visible =
+          matchesSearch &&
+          matchesLocation &&
+          matchesSkills &&
+          matchesExperience;
+
+        card.style.display = visible ? "" : "none";
+
+        if (visible) {
+          visibleCount++;
+        }
+      });
+
+      countElement.textContent = visibleCount;
+    }
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+      applyDemoFilters();
+    });
+
+    resetButton.addEventListener("click", function() {
+      form.reset();
+
+      cards.forEach(card => {
+        card.style.display = "";
+      });
+
+      countElement.textContent = cards.length;
+    });
+
+    document.getElementById("resume-sort").addEventListener("change", function() {
+      const sortValue = this.value;
+      const list = document.getElementById("resume-list");
+
+      const sortedCards = [...cards].sort((a, b) => {
+        if (sortValue === "name") {
+          return a.dataset.name.localeCompare(b.dataset.name);
+        }
+
+        if (sortValue === "experience") {
+          return Number(b.dataset.years) - Number(a.dataset.years);
+        }
+
+        return 0;
+      });
+
+      sortedCards.forEach(card => list.appendChild(card));
+    });
+
+    document.querySelectorAll(".resume-page").forEach(button => {
+      button.addEventListener("click", function() {
+        const page = this.dataset.page;
+
+        if (page === "prev" || page === "next") {
+          return;
+        }
+
+        document.querySelectorAll(".resume-page").forEach(item => {
+          item.classList.remove("is-active");
+        });
+
+        this.classList.add("is-active");
+
+        /*
+          Django version:
+          window.location.href = "?page=" + page;
+        */
+      });
+    });
+  </script> {% endcomment %}
+  {% endblock js %}

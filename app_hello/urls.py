@@ -19,6 +19,7 @@ from django.urls import path
 from app_hello import views
 
 urlpatterns = [
-    path('hello/', views.hello),
-    path('resume/<int:id>', views.resume),
+    path('', views.index),
+    path('my-form/', views.my_form),
+    path('resume/<int:id>', views.resume,  name='resume'),
 ]
