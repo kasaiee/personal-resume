@@ -7,15 +7,21 @@ from django.db.models import Q
 
 
 def index(request):
-    q = request.GET.get('q')
+    q = request.GET.get('q') or ''
+    skills = request.GET.getlist('skill')
     if q:
         users = User.objects.filter(
             Q(first_name__icontains=q) |
             Q(last_name__icontains=q) |
-            Q(profile__job_title__icontains=q)
+            Q(profile__job_title__icontains=q) |
+            Q(skill__title__icontains=q)
         )
     else:
         users = User.objects.all()
+
+    if skills:
+        users = users.filter(skill__title__in=skills)
+
     ITEM_PER_PAGE = 5  # Item per page
     paginator = Paginator(users, ITEM_PER_PAGE)
 
@@ -24,6 +30,7 @@ def index(request):
     context = {
         "page_obj": page_obj,
         "q": q,
+        'skills': skills
     }
     return render(request, "index.html", context)
 
