@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="resume-directory">
+
+    <header class="resume-directory__header">
+      <h1 class="resume-directory__title">
+        Resume <span class="resume-directory__accent">Directory</span>
+      </h1>
+      <p class="resume-directory__subtitle">
+        Edit your profile and add your skills.
+      </p>
+    </header>
+
+    <div class="resume-directory__body">
+
+      <form action="" method="post">
+        {{ user_form.as_table }}
+        {{ profile_form.as_table }}
+
+        <hr />
+        {{ experience_formset.management_form }}
+
+        {% for form in experience_formset %}
+            experience #{{ forloop.counter }}
+            {{ form.as_p }}
+        {% endfor %}
+
+        <button type="button" id="add-form">افزودن فرم</button>
+        {% csrf_token %}
+        <input type="submit">
+      </form>
+
+    </div>
+  </main>
+  <script>
+  const container = document.getElementById("form-container");
+  const addButton = document.getElementById("add-form");
+
+  
+  addButton.addEventListener("click", () => {
+    const totalForms = document.querySelector("#id_experience_set-TOTAL_FORMS")
+      const formCount = parseInt(totalForms.value);
+
+      const firstForm = container.querySelector(".form-row");
+      const newForm = firstForm.cloneNode(true);
+
+      newForm.innerHTML = newForm.innerHTML.replace(
+          /form-(\d+)-/g,
+          `form-${formCount}-`
+      );
+
+      newForm.querySelectorAll("input, select, textarea").forEach(field => {
+          field.value = "";
+      });
+
+      container.appendChild(newForm);
+
+      totalForms.value = formCount + 1;
+  });
+</script>
+{% endblock content %}

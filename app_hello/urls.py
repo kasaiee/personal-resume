@@ -22,4 +22,5 @@ urlpatterns = [
     path('', views.index),
     path('my-form/', views.my_form),
     path('resume/<int:id>', views.resume,  name='resume'),
+    path('resume/edit', views.resume_edit,  name='resume-edit'),
 ]

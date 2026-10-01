@@ -54,13 +54,11 @@
 
           <div class="resume-filter-group">
             <div class="resume-section-title">Location</div>
-            <select id="resume-location" class="resume-select">
+            <select id="resume-location" class="resume-select" name="location">
               <option value="">All Locations</option>
-              <option>Tehran, Iran</option>
-              <option>Isfahan, Iran</option>
-              <option>Shiraz, Iran</option>
-              <option>Mashhad, Iran</option>
-              <option>Karaj, Iran</option>
+              {% for location in locations %}
+              <option value="{{ location }}">{{ location }}</option>
+              {% endfor %}
             </select>
           </div>
 

@@ -216,7 +216,7 @@ class Command(BaseCommand):
             for _ in range(experience_count):
                 experiences.append(
                     Experience(
-                        user=user,
+                        profile=user.profile,
                         title=random.choice(companies),
                         location=f"{fake.city()}, {fake.country()}",
                         date_range=random.choice([
@@ -251,7 +251,7 @@ class Command(BaseCommand):
             for _ in range(education_count):
                 educations.append(
                     Education(
-                        user=user,
+                        profile=user.profile,
                         university=random.choice(universities),
                         location=fake.city(),
                         date_range=random.choice([
@@ -286,7 +286,7 @@ class Command(BaseCommand):
             for _ in range(project_count):
                 projects.append(
                     Project(
-                        user=user,
+                        profile=user.profile,
                         title=random.choice(project_titles),
                         description=fake.paragraph(
                             nb_sentences=4
@@ -317,7 +317,7 @@ class Command(BaseCommand):
             for skill_name in selected_skills:
                 skills.append(
                     Skill(
-                        user=user,
+                        profile=user.profile,
                         title=skill_name,
                         level=random.randint(1, 5),
                     )

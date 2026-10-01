@@ -637,10 +637,22 @@
         .resume-page {
             text-decoration: none;
         }
+
+        .nav {
+            background-color: #fff;
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .errorlist {
+            color: red
+        }
     </style>
     {% endblock css %}
 
 </head>
+{% include "components/nav.html" %}
 {% block content %}{% endblock content %}
 {% block js %}{% endblock js %}
 <body>
