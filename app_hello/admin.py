@@ -15,7 +15,7 @@ class ExperienceInline(admin.TabularInline):
     model = Experience
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user__username', 'job_title')
+    list_display = ('id', 'user', 'job_title')
     search_fields = ('user__username', 'user__first_name', 'user__last_name', 'job_title')
     list_filter = ('location', )
     inlines = (SkillInline, ProjectInline, EducationInline, ExperienceInline)

@@ -56,6 +56,17 @@ def resume(request, id):
     return render(request, 'resume.html', context)
 
 
+# def login_required(my_view):
+#     def wrapper(request):
+#         if not request.user.is_authenticated:
+#             return redirect('home')
+#         return my_view(request)
+#     return wrapper
+
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
 def resume_edit(request):
     user_form = None
     profile_form = None
@@ -65,7 +76,7 @@ def resume_edit(request):
         profile_form = ProfileForm(request.POST, instance=request.user.profile)
         experience_formset = ExperienceFormSet(
             request.POST,
-            instance=request.user
+            instance=request.user.profile
         )
 
         if user_form.is_valid() and profile_form.is_valid():

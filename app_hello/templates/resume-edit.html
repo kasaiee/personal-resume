@@ -21,10 +21,13 @@
         <hr />
         {{ experience_formset.management_form }}
 
+        <div id="form-container">
         {% for form in experience_formset %}
-            experience #{{ forloop.counter }}
+          <div class="form-row">
             {{ form.as_p }}
+          </div>
         {% endfor %}
+        </div>
 
         <button type="button" id="add-form">افزودن فرم</button>
         {% csrf_token %}
@@ -39,16 +42,13 @@
 
   
   addButton.addEventListener("click", () => {
-    const totalForms = document.querySelector("#id_experience_set-TOTAL_FORMS")
+      const totalForms = document.querySelector("#id_experience_set-TOTAL_FORMS")
       const formCount = parseInt(totalForms.value);
 
       const firstForm = container.querySelector(".form-row");
       const newForm = firstForm.cloneNode(true);
 
-      newForm.innerHTML = newForm.innerHTML.replace(
-          /form-(\d+)-/g,
-          `form-${formCount}-`
-      );
+      newForm.innerHTML = newForm.innerHTML.replace(/_set-(\d+)-/g, `_set-${formCount}-`);
 
       newForm.querySelectorAll("input, select, textarea").forEach(field => {
           field.value = "";
